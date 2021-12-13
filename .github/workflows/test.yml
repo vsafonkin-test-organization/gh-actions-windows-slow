@@ -1,0 +1,27 @@
+name: test
+on: push
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        shell: [bash, pwsh]
+
+    runs-on: ${{ matrix.os }}
+
+    defaults:
+      run:
+        shell: ${{ matrix.shell }}
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install with download
+      run: yarn install --verbose
+
+    - name: Remove node_modules
+      run: mv node_modules backup
+
+    - name: Install from local cache
+      run: yarn install --verbose
